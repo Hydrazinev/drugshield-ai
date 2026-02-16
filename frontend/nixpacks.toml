@@ -10,7 +10,7 @@ nixPkgs = ["nodejs_20", "npm-9_x"]
 cmds = ["npm ci --no-audit --no-fund"]
 
 [phases.build]
-cmds = ["rm -rf node_modules/.cache && npm run build"]
+cmds = ["npm run build"]
 
 [start]
 cmd = "npm run start -- -p $PORT"
