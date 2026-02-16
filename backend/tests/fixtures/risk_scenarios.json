@@ -1,0 +1,1687 @@
+[
+  {
+    "id": "single_lisinopril_normal",
+    "age": 30,
+    "meds": [
+      {
+        "raw_name": "lisinopril",
+        "normalized_name": "lisinopril",
+        "rxcui": "29046",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.0,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 0.0
+    }
+  },
+  {
+    "id": "single_warfarin_elderly",
+    "age": 82,
+    "meds": [
+      {
+        "raw_name": "warfarin",
+        "normalized_name": "warfarin",
+        "rxcui": "11289",
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 4.2,
+      "urgency": "YELLOW_CALL_SOON",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 4.5
+    }
+  },
+  {
+    "id": "single_valium_extreme",
+    "age": 82,
+    "meds": [
+      {
+        "raw_name": "Valium",
+        "normalized_name": "diazepam",
+        "rxcui": "202472",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 8.8,
+      "urgency": "RED_URGENT",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 10.0,
+      "vulnerability": 5.5
+    }
+  },
+  {
+    "id": "single_xanax_high",
+    "age": 44,
+    "meds": [
+      {
+        "raw_name": "Xanax",
+        "normalized_name": "alprazolam",
+        "rxcui": "596",
+        "dose": "12 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 1.3,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 3.0,
+      "vulnerability": 2.0
+    }
+  },
+  {
+    "id": "warfarin_ibuprofen_high_ddi",
+    "age": 75,
+    "meds": [
+      {
+        "raw_name": "warfarin",
+        "normalized_name": "warfarin",
+        "rxcui": "11289",
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "ibuprofen",
+        "normalized_name": "ibuprofen",
+        "rxcui": "5640",
+        "dose": "400 mg",
+        "frequency": "afternoon",
+        "note": null
+      }
+    ],
+    "interactions": [
+      {
+        "drug_a": "warfarin",
+        "drug_b": "ibuprofen",
+        "severity": "high",
+        "source_text": "x"
+      }
+    ],
+    "expected": {
+      "score": 7.0,
+      "urgency": "YELLOW_CALL_SOON",
+      "confidence": "high",
+      "ddi": 7.33,
+      "dose": 0.0,
+      "vulnerability": 5.0
+    }
+  },
+  {
+    "id": "moderate_ddi_pair",
+    "age": 60,
+    "meds": [
+      {
+        "raw_name": "sertraline",
+        "normalized_name": "sertraline",
+        "rxcui": "36437",
+        "dose": "100 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "tramadol",
+        "normalized_name": "tramadol",
+        "rxcui": "10689",
+        "dose": "50 mg",
+        "frequency": "twice daily",
+        "note": null
+      }
+    ],
+    "interactions": [
+      {
+        "drug_a": "sertraline",
+        "drug_b": "tramadol",
+        "severity": "moderate",
+        "source_text": "x"
+      }
+    ],
+    "expected": {
+      "score": 2.1,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 3.0,
+      "dose": 0.0,
+      "vulnerability": 3.0
+    }
+  },
+  {
+    "id": "low_ddi_pair",
+    "age": 40,
+    "meds": [
+      {
+        "raw_name": "cetirizine",
+        "normalized_name": "cetirizine",
+        "rxcui": "20610",
+        "dose": "10 mg",
+        "frequency": "night",
+        "note": null
+      },
+      {
+        "raw_name": "acetaminophen",
+        "normalized_name": "acetaminophen",
+        "rxcui": "161",
+        "dose": "500 mg",
+        "frequency": "twice daily",
+        "note": null
+      }
+    ],
+    "interactions": [
+      {
+        "drug_a": "cetirizine",
+        "drug_b": "acetaminophen",
+        "severity": "low",
+        "source_text": "x"
+      }
+    ],
+    "expected": {
+      "score": 1.67,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 1.33,
+      "dose": 3.0,
+      "vulnerability": 0.5
+    }
+  },
+  {
+    "id": "unknown_ddi_pair",
+    "age": 55,
+    "meds": [
+      {
+        "raw_name": "metformin",
+        "normalized_name": "metformin",
+        "rxcui": "6809",
+        "dose": "500 mg",
+        "frequency": "twice daily",
+        "note": null
+      },
+      {
+        "raw_name": "amlodipine",
+        "normalized_name": "amlodipine",
+        "rxcui": "17767",
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [
+      {
+        "drug_a": "metformin",
+        "drug_b": "amlodipine",
+        "severity": "unknown",
+        "source_text": "x"
+      }
+    ],
+    "expected": {
+      "score": 1.18,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 2.17,
+      "dose": 0.0,
+      "vulnerability": 0.5
+    }
+  },
+  {
+    "id": "polypharmacy_ten_meds",
+    "age": 76,
+    "meds": [
+      {
+        "raw_name": "warfarin",
+        "normalized_name": "warfarin",
+        "rxcui": "11289",
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "lisinopril",
+        "normalized_name": "lisinopril",
+        "rxcui": "29046",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "metformin",
+        "normalized_name": "metformin",
+        "rxcui": "6809",
+        "dose": "1000 mg",
+        "frequency": "twice daily",
+        "note": null
+      },
+      {
+        "raw_name": "atorvastatin",
+        "normalized_name": "atorvastatin",
+        "rxcui": "83367",
+        "dose": "40 mg",
+        "frequency": "night",
+        "note": null
+      },
+      {
+        "raw_name": "omeprazole",
+        "normalized_name": "omeprazole",
+        "rxcui": "7646",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "sertraline",
+        "normalized_name": "sertraline",
+        "rxcui": "36437",
+        "dose": "50 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "gabapentin",
+        "normalized_name": "gabapentin",
+        "rxcui": "25480",
+        "dose": "300 mg",
+        "frequency": "three times daily",
+        "note": null
+      },
+      {
+        "raw_name": "amlodipine",
+        "normalized_name": "amlodipine",
+        "rxcui": "17767",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "furosemide",
+        "normalized_name": "furosemide",
+        "rxcui": "4603",
+        "dose": "40 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "aspirin",
+        "normalized_name": "aspirin",
+        "rxcui": "1191",
+        "dose": "81 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 6.5,
+      "urgency": "YELLOW_CALL_SOON",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 3.0,
+      "vulnerability": 10.0
+    }
+  },
+  {
+    "id": "polypharmacy_twenty_meds_floor",
+    "age": 79,
+    "meds": [
+      {
+        "raw_name": "med0",
+        "normalized_name": "lisinopril",
+        "rxcui": "1000",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med1",
+        "normalized_name": "metformin",
+        "rxcui": "1001",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med2",
+        "normalized_name": "lisinopril",
+        "rxcui": "1002",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med3",
+        "normalized_name": "metformin",
+        "rxcui": "1003",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med4",
+        "normalized_name": "lisinopril",
+        "rxcui": "1004",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med5",
+        "normalized_name": "metformin",
+        "rxcui": "1005",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med6",
+        "normalized_name": "lisinopril",
+        "rxcui": "1006",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med7",
+        "normalized_name": "metformin",
+        "rxcui": "1007",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med8",
+        "normalized_name": "lisinopril",
+        "rxcui": "1008",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med9",
+        "normalized_name": "metformin",
+        "rxcui": "1009",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med10",
+        "normalized_name": "lisinopril",
+        "rxcui": "1010",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med11",
+        "normalized_name": "metformin",
+        "rxcui": "1011",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med12",
+        "normalized_name": "lisinopril",
+        "rxcui": "1012",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med13",
+        "normalized_name": "metformin",
+        "rxcui": "1013",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med14",
+        "normalized_name": "lisinopril",
+        "rxcui": "1014",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med15",
+        "normalized_name": "metformin",
+        "rxcui": "1015",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med16",
+        "normalized_name": "lisinopril",
+        "rxcui": "1016",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med17",
+        "normalized_name": "metformin",
+        "rxcui": "1017",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med18",
+        "normalized_name": "lisinopril",
+        "rxcui": "1018",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "med19",
+        "normalized_name": "metformin",
+        "rxcui": "1019",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 8.0,
+      "urgency": "RED_URGENT",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 10.0
+    }
+  },
+  {
+    "id": "high_risk_substance_cocaine",
+    "age": 28,
+    "meds": [
+      {
+        "raw_name": "cocaine",
+        "normalized_name": "cocaine",
+        "rxcui": "999",
+        "dose": "50 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 7.5,
+      "urgency": "RED_URGENT",
+      "confidence": "low",
+      "ddi": 0.0,
+      "dose": 1.5,
+      "vulnerability": 8.0
+    }
+  },
+  {
+    "id": "high_risk_substance_heroin",
+    "age": 31,
+    "meds": [
+      {
+        "raw_name": "heroin",
+        "normalized_name": "heroin",
+        "rxcui": "998",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 7.5,
+      "urgency": "RED_URGENT",
+      "confidence": "low",
+      "ddi": 0.0,
+      "dose": 1.5,
+      "vulnerability": 8.0
+    }
+  },
+  {
+    "id": "sedative_elderly_combo_no_ddi",
+    "age": 81,
+    "meds": [
+      {
+        "raw_name": "alprazolam",
+        "normalized_name": "alprazolam",
+        "rxcui": "596",
+        "dose": "0.5 mg",
+        "frequency": "night",
+        "note": null
+      },
+      {
+        "raw_name": "lisinopril",
+        "normalized_name": "lisinopril",
+        "rxcui": "29046",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 4.0,
+      "urgency": "YELLOW_CALL_SOON",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 6.0
+    }
+  },
+  {
+    "id": "apixaban_elderly",
+    "age": 84,
+    "meds": [
+      {
+        "raw_name": "Eliquis",
+        "normalized_name": "apixaban",
+        "rxcui": "1364430",
+        "dose": "5 mg",
+        "frequency": "twice daily",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 4.2,
+      "urgency": "YELLOW_CALL_SOON",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 4.5
+    }
+  },
+  {
+    "id": "clopidogrel_elderly",
+    "age": 78,
+    "meds": [
+      {
+        "raw_name": "Plavix",
+        "normalized_name": "clopidogrel",
+        "rxcui": "32968",
+        "dose": "75 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 4.2,
+      "urgency": "YELLOW_CALL_SOON",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 3.0,
+      "vulnerability": 3.6
+    }
+  },
+  {
+    "id": "dose_upper_range_metformin",
+    "age": 50,
+    "meds": [
+      {
+        "raw_name": "metformin",
+        "normalized_name": "metformin",
+        "rxcui": "6809",
+        "dose": "850 mg",
+        "frequency": "three times daily",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.9,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 3.0,
+      "vulnerability": 0.0
+    }
+  },
+  {
+    "id": "dose_high_lisinopril",
+    "age": 52,
+    "meds": [
+      {
+        "raw_name": "lisinopril",
+        "normalized_name": "lisinopril",
+        "rxcui": "29046",
+        "dose": "120 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 1.8,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 6.0,
+      "vulnerability": 0.0
+    }
+  },
+  {
+    "id": "dose_extreme_lisinopril",
+    "age": 52,
+    "meds": [
+      {
+        "raw_name": "lisinopril",
+        "normalized_name": "lisinopril",
+        "rxcui": "29046",
+        "dose": "300 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 8.8,
+      "urgency": "RED_URGENT",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 10.0,
+      "vulnerability": 0.0
+    }
+  },
+  {
+    "id": "dose_normal_ibuprofen",
+    "age": 35,
+    "meds": [
+      {
+        "raw_name": "ibuprofen",
+        "normalized_name": "ibuprofen",
+        "rxcui": "5640",
+        "dose": "400 mg",
+        "frequency": "every 8 hours",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.0,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 0.0
+    }
+  },
+  {
+    "id": "dose_high_ibuprofen",
+    "age": 35,
+    "meds": [
+      {
+        "raw_name": "ibuprofen",
+        "normalized_name": "ibuprofen",
+        "rxcui": "5640",
+        "dose": "1200 mg",
+        "frequency": "every 8 hours",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.9,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 3.0,
+      "vulnerability": 0.0
+    }
+  },
+  {
+    "id": "approximate_single_should_not_high",
+    "age": 45,
+    "meds": [
+      {
+        "raw_name": "warfaing",
+        "normalized_name": "warfarin",
+        "rxcui": "11289",
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": "Approximate RxNorm match. Double check medication name."
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.5,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "low",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 2.5
+    }
+  },
+  {
+    "id": "unmatched_single",
+    "age": 40,
+    "meds": [
+      {
+        "raw_name": "asdasd",
+        "normalized_name": "asdasd",
+        "rxcui": null,
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": "No confident RxNorm match found."
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.61,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "low",
+      "ddi": 0.0,
+      "dose": 1.5,
+      "vulnerability": 0.8
+    }
+  },
+  {
+    "id": "mixed_matched_unmatched",
+    "age": 65,
+    "meds": [
+      {
+        "raw_name": "warfarin",
+        "normalized_name": "warfarin",
+        "rxcui": "11289",
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "zzzzz",
+        "normalized_name": "zzzzz",
+        "rxcui": null,
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": "No confident RxNorm match found."
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 1.41,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "low",
+      "ddi": 0.0,
+      "dose": 1.5,
+      "vulnerability": 4.8
+    }
+  },
+  {
+    "id": "two_high_interactions_floor",
+    "age": 68,
+    "meds": [
+      {
+        "raw_name": "warfarin",
+        "normalized_name": "warfarin",
+        "rxcui": "11289",
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "ibuprofen",
+        "normalized_name": "ibuprofen",
+        "rxcui": "5640",
+        "dose": "800 mg",
+        "frequency": "three times daily",
+        "note": null
+      },
+      {
+        "raw_name": "sertraline",
+        "normalized_name": "sertraline",
+        "rxcui": "36437",
+        "dose": "100 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [
+      {
+        "drug_a": "warfarin",
+        "drug_b": "ibuprofen",
+        "severity": "high",
+        "source_text": "x"
+      },
+      {
+        "drug_a": "warfarin",
+        "drug_b": "sertraline",
+        "severity": "high",
+        "source_text": "x"
+      }
+    ],
+    "expected": {
+      "score": 8.5,
+      "urgency": "RED_URGENT",
+      "confidence": "high",
+      "ddi": 10.0,
+      "dose": 0.0,
+      "vulnerability": 4.5
+    }
+  },
+  {
+    "id": "three_moderate_interactions",
+    "age": 64,
+    "meds": [
+      {
+        "raw_name": "sertraline",
+        "normalized_name": "sertraline",
+        "rxcui": "36437",
+        "dose": "100 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "tramadol",
+        "normalized_name": "tramadol",
+        "rxcui": "10689",
+        "dose": "50 mg",
+        "frequency": "twice daily",
+        "note": null
+      },
+      {
+        "raw_name": "ondansetron",
+        "normalized_name": "ondansetron",
+        "rxcui": "26225",
+        "dose": "8 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [
+      {
+        "drug_a": "sertraline",
+        "drug_b": "tramadol",
+        "severity": "moderate",
+        "source_text": "x"
+      },
+      {
+        "drug_a": "sertraline",
+        "drug_b": "ondansetron",
+        "severity": "moderate",
+        "source_text": "x"
+      },
+      {
+        "drug_a": "tramadol",
+        "drug_b": "ondansetron",
+        "severity": "moderate",
+        "source_text": "x"
+      }
+    ],
+    "expected": {
+      "score": 5.2,
+      "urgency": "YELLOW_CALL_SOON",
+      "confidence": "high",
+      "ddi": 9.0,
+      "dose": 0.0,
+      "vulnerability": 3.5
+    }
+  },
+  {
+    "id": "brand_alias_tylenol",
+    "age": 33,
+    "meds": [
+      {
+        "raw_name": "Tylenol",
+        "normalized_name": "Tylenol",
+        "rxcui": "161",
+        "dose": "1000 mg",
+        "frequency": "every 8 hours",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.0,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 0.0
+    }
+  },
+  {
+    "id": "brand_alias_coumadin",
+    "age": 77,
+    "meds": [
+      {
+        "raw_name": "Coumadin",
+        "normalized_name": "Coumadin",
+        "rxcui": "11289",
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.4,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 2.0
+    }
+  },
+  {
+    "id": "brand_alias_advil",
+    "age": 43,
+    "meds": [
+      {
+        "raw_name": "Advil",
+        "normalized_name": "Advil",
+        "rxcui": "5640",
+        "dose": "400 mg",
+        "frequency": "every 8 hours",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.0,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 0.0
+    }
+  },
+  {
+    "id": "sedative_poly_elderly",
+    "age": 86,
+    "meds": [
+      {
+        "raw_name": "diazepam",
+        "normalized_name": "diazepam",
+        "rxcui": "3322",
+        "dose": "10 mg",
+        "frequency": "night",
+        "note": null
+      },
+      {
+        "raw_name": "temazepam",
+        "normalized_name": "temazepam",
+        "rxcui": "10355",
+        "dose": "15 mg",
+        "frequency": "night",
+        "note": null
+      },
+      {
+        "raw_name": "lisinopril",
+        "normalized_name": "lisinopril",
+        "rxcui": "29046",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 6.0,
+      "urgency": "YELLOW_CALL_SOON",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 9.5
+    }
+  },
+  {
+    "id": "opioid_single",
+    "age": 58,
+    "meds": [
+      {
+        "raw_name": "oxycodone",
+        "normalized_name": "oxycodone",
+        "rxcui": "7804",
+        "dose": "10 mg",
+        "frequency": "every 6 hours",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.5,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 2.5
+    }
+  },
+  {
+    "id": "opioid_plus_sedative",
+    "age": 70,
+    "meds": [
+      {
+        "raw_name": "oxycodone",
+        "normalized_name": "oxycodone",
+        "rxcui": "7804",
+        "dose": "10 mg",
+        "frequency": "every 6 hours",
+        "note": null
+      },
+      {
+        "raw_name": "alprazolam",
+        "normalized_name": "alprazolam",
+        "rxcui": "596",
+        "dose": "1 mg",
+        "frequency": "night",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 4.0,
+      "urgency": "YELLOW_CALL_SOON",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 7.5
+    }
+  },
+  {
+    "id": "unknown_dose_text",
+    "age": 54,
+    "meds": [
+      {
+        "raw_name": "lisinopril",
+        "normalized_name": "lisinopril",
+        "rxcui": "29046",
+        "dose": "one tablet",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.0,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "medium",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 0.0
+    }
+  },
+  {
+    "id": "missing_dose_field",
+    "age": 54,
+    "meds": [
+      {
+        "raw_name": "lisinopril",
+        "normalized_name": "lisinopril",
+        "rxcui": "29046",
+        "dose": "",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 0.0,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "medium",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 0.0
+    }
+  },
+  {
+    "id": "dose_extreme_colchicine",
+    "age": 66,
+    "meds": [
+      {
+        "raw_name": "colchicine",
+        "normalized_name": "colchicine",
+        "rxcui": "2683",
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 2.0,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 6.0,
+      "vulnerability": 1.0
+    }
+  },
+  {
+    "id": "dose_high_tamsulosin",
+    "age": 72,
+    "meds": [
+      {
+        "raw_name": "tamsulosin",
+        "normalized_name": "tamsulosin",
+        "rxcui": "77492",
+        "dose": "0.8 mg",
+        "frequency": "twice daily",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 2.0,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 6.0,
+      "vulnerability": 1.0
+    }
+  },
+  {
+    "id": "multi_with_approx_and_unmatched",
+    "age": 72,
+    "meds": [
+      {
+        "raw_name": "warfaing",
+        "normalized_name": "warfarin",
+        "rxcui": "11289",
+        "dose": "5 mg",
+        "frequency": "morning",
+        "note": "Approximate RxNorm match. Double check medication name."
+      },
+      {
+        "raw_name": "abcxyz",
+        "normalized_name": "abcxyz",
+        "rxcui": null,
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": "No confident RxNorm match found."
+      },
+      {
+        "raw_name": "lisinopril",
+        "normalized_name": "lisinopril",
+        "rxcui": "29046",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 1.51,
+      "urgency": "GREEN_MONITOR",
+      "confidence": "low",
+      "ddi": 0.0,
+      "dose": 1.5,
+      "vulnerability": 5.3
+    }
+  },
+  {
+    "id": "high_ddi_plus_extreme_dose",
+    "age": 80,
+    "meds": [
+      {
+        "raw_name": "warfarin",
+        "normalized_name": "warfarin",
+        "rxcui": "11289",
+        "dose": "60 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "ibuprofen",
+        "normalized_name": "ibuprofen",
+        "rxcui": "5640",
+        "dose": "1600 mg",
+        "frequency": "every 8 hours",
+        "note": null
+      }
+    ],
+    "interactions": [
+      {
+        "drug_a": "warfarin",
+        "drug_b": "ibuprofen",
+        "severity": "high",
+        "source_text": "x"
+      }
+    ],
+    "expected": {
+      "score": 8.8,
+      "urgency": "RED_URGENT",
+      "confidence": "high",
+      "ddi": 7.33,
+      "dose": 10.0,
+      "vulnerability": 5.0
+    }
+  },
+  {
+    "id": "fifty_meds_floor",
+    "age": 70,
+    "meds": [
+      {
+        "raw_name": "drug0",
+        "normalized_name": "metformin",
+        "rxcui": "5000",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug1",
+        "normalized_name": "lisinopril",
+        "rxcui": "5001",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug2",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5002",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug3",
+        "normalized_name": "metformin",
+        "rxcui": "5003",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug4",
+        "normalized_name": "lisinopril",
+        "rxcui": "5004",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug5",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5005",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug6",
+        "normalized_name": "metformin",
+        "rxcui": "5006",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug7",
+        "normalized_name": "lisinopril",
+        "rxcui": "5007",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug8",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5008",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug9",
+        "normalized_name": "metformin",
+        "rxcui": "5009",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug10",
+        "normalized_name": "lisinopril",
+        "rxcui": "5010",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug11",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5011",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug12",
+        "normalized_name": "metformin",
+        "rxcui": "5012",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug13",
+        "normalized_name": "lisinopril",
+        "rxcui": "5013",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug14",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5014",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug15",
+        "normalized_name": "metformin",
+        "rxcui": "5015",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug16",
+        "normalized_name": "lisinopril",
+        "rxcui": "5016",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug17",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5017",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug18",
+        "normalized_name": "metformin",
+        "rxcui": "5018",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug19",
+        "normalized_name": "lisinopril",
+        "rxcui": "5019",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug20",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5020",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug21",
+        "normalized_name": "metformin",
+        "rxcui": "5021",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug22",
+        "normalized_name": "lisinopril",
+        "rxcui": "5022",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug23",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5023",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug24",
+        "normalized_name": "metformin",
+        "rxcui": "5024",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug25",
+        "normalized_name": "lisinopril",
+        "rxcui": "5025",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug26",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5026",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug27",
+        "normalized_name": "metformin",
+        "rxcui": "5027",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug28",
+        "normalized_name": "lisinopril",
+        "rxcui": "5028",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug29",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5029",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug30",
+        "normalized_name": "metformin",
+        "rxcui": "5030",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug31",
+        "normalized_name": "lisinopril",
+        "rxcui": "5031",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug32",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5032",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug33",
+        "normalized_name": "metformin",
+        "rxcui": "5033",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug34",
+        "normalized_name": "lisinopril",
+        "rxcui": "5034",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug35",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5035",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug36",
+        "normalized_name": "metformin",
+        "rxcui": "5036",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug37",
+        "normalized_name": "lisinopril",
+        "rxcui": "5037",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug38",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5038",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug39",
+        "normalized_name": "metformin",
+        "rxcui": "5039",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug40",
+        "normalized_name": "lisinopril",
+        "rxcui": "5040",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug41",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5041",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug42",
+        "normalized_name": "metformin",
+        "rxcui": "5042",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug43",
+        "normalized_name": "lisinopril",
+        "rxcui": "5043",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug44",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5044",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug45",
+        "normalized_name": "metformin",
+        "rxcui": "5045",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug46",
+        "normalized_name": "lisinopril",
+        "rxcui": "5046",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug47",
+        "normalized_name": "atorvastatin",
+        "rxcui": "5047",
+        "dose": "20 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug48",
+        "normalized_name": "metformin",
+        "rxcui": "5048",
+        "dose": "500 mg",
+        "frequency": "morning",
+        "note": null
+      },
+      {
+        "raw_name": "drug49",
+        "normalized_name": "lisinopril",
+        "rxcui": "5049",
+        "dose": "10 mg",
+        "frequency": "morning",
+        "note": null
+      }
+    ],
+    "interactions": [],
+    "expected": {
+      "score": 9.0,
+      "urgency": "RED_URGENT",
+      "confidence": "high",
+      "ddi": 0.0,
+      "dose": 0.0,
+      "vulnerability": 10.0
+    }
+  }
+]

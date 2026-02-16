@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f6ee;
+  --foreground: #102129;
+  --surface: #fefcf7;
+  --line: #d8d5c8;
+  --brand-ink: #0f3d4c;
+  --brand-warm: #ff8f5a;
+  --brand-leaf: #84b880;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-display-sans);
+  --font-mono: var(--font-ui-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-display-sans), sans-serif;
+}
+
+.app-bg {
+  background-image:
+    radial-gradient(circle at 12% 8%, #cbe6f2 0%, transparent 24%),
+    radial-gradient(circle at 85% 2%, #ffe4c5 0%, transparent 20%),
+    radial-gradient(circle at 78% 88%, #d8efd4 0%, transparent 24%),
+    linear-gradient(160deg, #f7f8f3 0%, #f1f5ea 100%);
+}
+
+.panel-glass {
+  background: color-mix(in oklab, var(--surface) 90%, white 10%);
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 40px rgba(16, 33, 41, 0.08);
+}
+
+.rise-in {
+  animation: rise-in 440ms ease-out both;
+}
+
+.theme-dark {
+  --background: #0b1016;
+  --foreground: #e6eef3;
+  --surface: #111923;
+  --line: #2a3a47;
+  --brand-ink: #bfe8ff;
+  --brand-warm: #ff9d65;
+  --brand-leaf: #8fd5b2;
+}
+
+.theme-dark.app-bg {
+  background-image:
+    radial-gradient(circle at 12% 8%, #133243 0%, transparent 24%),
+    radial-gradient(circle at 85% 2%, #513629 0%, transparent 20%),
+    radial-gradient(circle at 78% 88%, #1e3d35 0%, transparent 24%),
+    linear-gradient(160deg, #0c141d 0%, #0a121a 100%);
+}
+
+.theme-dark .panel-glass {
+  background: #111923cc;
+  border-color: #2a3a47;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+.theme-dark .bg-white,
+.theme-dark .bg-white\/60,
+.theme-dark .bg-white\/70,
+.theme-dark .bg-white\/80,
+.theme-dark .bg-white\/85,
+.theme-dark .bg-white\/90 {
+  background-color: #16212c !important;
+}
+
+.theme-dark .text-slate-600,
+.theme-dark .text-slate-700,
+.theme-dark .text-slate-800 {
+  color: #c4d2db !important;
+}
+
+.theme-dark .border-slate-200,
+.theme-dark .border-slate-300,
+.theme-dark .border-slate-500,
+.theme-dark .border-slate-600 {
+  border-color: #34495a !important;
+}
+
+.theme-dark input,
+.theme-dark select,
+.theme-dark textarea {
+  background: #111923 !important;
+  color: #e6eef3 !important;
+  border-color: #34495a !important;
+}
+
+.theme-dark input::placeholder {
+  color: #8da2b0;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

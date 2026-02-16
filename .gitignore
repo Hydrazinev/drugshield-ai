@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+backend/.venv/
+
+# Node / Next
+frontend/node_modules/
+frontend/.next/
+
+# Environment files
+.env
+.env.*
+backend/.env
+frontend/.env.local
+
+# Logs and temp
+*.log
+backend/*.log
+frontend/*.log
+
+# OS files
+.DS_Store
+Thumbs.db
