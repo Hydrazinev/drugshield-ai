@@ -1,6 +1,7 @@
 # llm_explain.py
 import os
 import json
+import re
 from typing import Any, Dict, List
 
 GENERIC_WATCH = ["Dizziness", "Sleepiness", "Stomach upset", "Any unusual symptoms"]
@@ -9,6 +10,46 @@ GENERIC_WATCH = ["Dizziness", "Sleepiness", "Stomach upset", "Any unusual sympto
 def _is_not_specified(value: Any) -> bool:
     txt = str(value or "").strip().lower()
     return txt in {"", "not specified in the data", "not specified", "n/a", "na", "none", "null"}
+
+
+def _normalize_severity_label(sev: Any) -> str:
+    s = str(sev or "").strip().lower()
+    if s in {"high", "moderate", "low"}:
+        return s
+    return "uncertain"
+
+
+def _looks_too_technical(text: str) -> bool:
+    t = str(text or "")
+    t_low = t.lower()
+    return (
+        len(t) > 240
+        or "table" in t_low
+        or "cyp" in t_low
+        or "enzyme" in t_low
+        or "openfda label fallback" in t_low
+        or "local fallback rule" in t_low
+        or t.count(",") > 8
+    )
+
+
+def _plain_pair_explanation(a: str, b: str, severity: str, original: str) -> str:
+    if not _looks_too_technical(original):
+        clean = re.sub(
+            r"\s*\((openfda label fallback|local fallback rule)\)\s*$",
+            "",
+            str(original),
+            flags=re.I,
+        )
+        return clean.strip()
+
+    if severity == "high":
+        return f"Taking {a} and {b} together may increase strong side effects and needs quick clinical review."
+    if severity == "moderate":
+        return f"Taking {a} with {b} may increase side effects, so extra monitoring is recommended."
+    if severity == "low":
+        return f"{a} and {b} usually have a lower interaction risk, but side effects are still possible."
+    return f"No confirmed direct interaction was found for {a} and {b}, but monitor symptoms and confirm with a clinician."
 
 
 def _default_explanation_card(med_names: List[str], interactions: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -178,13 +219,16 @@ def _ensure_explanation_shape(bundle: Dict[str, Any], out: Dict[str, Any]) -> Di
         if _is_not_specified(step):
             step = _default_explanation_card(med_names, interactions)["recommended_next_step"]
 
+        sev_norm = _normalize_severity_label(sev)
+        a_txt = str(a or "this medicine")
+        b_txt = str(b or "this medicine")
         cleaned.append(
             {
-                "pair": [a or "Not specified in the data", b or "Not specified in the data"],
-                "severity": str(sev or "unknown"),
-                "simple_explanation": str(simple),
+                "pair": [a_txt, b_txt],
+                "severity": sev_norm,
+                "simple_explanation": _plain_pair_explanation(a_txt, b_txt, sev_norm, str(simple)),
                 "what_to_watch_for": watch,
-                "recommended_next_step": str(step),
+                "recommended_next_step": str(step or "If new symptoms appear, contact your clinician or pharmacist."),
             }
         )
 
@@ -233,6 +277,8 @@ def _call_responses_api_interactions_only(bundle: Dict[str, Any]) -> List[Dict[s
         "Return only a JSON array. Each item must contain keys: "
         "pair (two-item array), severity, simple_explanation, what_to_watch_for, recommended_next_step. "
         "For each pair, explain what happens when both medicines are taken together in plain language. "
+        "Do NOT copy tables, enzyme names, long warning lists, or raw label text. "
+        "simple_explanation must be 1-2 short, easy sentences for non-medical users. "
         "Do not output markdown or extra text. "
         "If interaction evidence is missing, still provide a conservative practical explanation and monitoring guidance. "
         "Do not provide advice to start/stop medicines."
