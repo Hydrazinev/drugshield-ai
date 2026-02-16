@@ -17,7 +17,8 @@ import scoring as scoring_module
 
 
 from models import AnalyzeRequest, AnalyzeResponse, NormalizedMed, InteractionFact
-from rxnav import get_rxcui_for_name, get_interactions_for_rxcuis
+from rxnav import get_rxcui_for_name, get_interactions_for_rxcuis, infer_interactions_from_names
+from openfda_fallback import infer_interactions_from_openfda
 from scoring import compute_score_breakdown, urgency_from_score
 from llm_explain import build_facts_bundle, explain_with_llm
 from pdf_report import render_report_bytes
@@ -37,6 +38,41 @@ DISCLAIMER = (
     "Decision support only. Not medical advice. "
     "Always confirm medication changes with a licensed clinician."
 )
+
+SEVERITY_RANK = {"unknown": 0, "low": 1, "moderate": 2, "high": 3}
+
+
+def _build_llm_pair_fallback_cards(meds: list[dict], max_pairs: int = 6) -> list[dict]:
+    """
+    Build synthetic pair cards for LLM explanation only when no confirmed DDI pairs exist.
+    These cards do not affect score calculation.
+    """
+    names: list[str] = []
+    seen_lower: set[str] = set()
+    for m in meds:
+        nm = str(m.get("normalized_name") or m.get("raw_name") or "").strip()
+        if not nm:
+            continue
+        nm_lower = nm.lower()
+        if nm_lower in seen_lower:
+            continue
+        seen_lower.add(nm_lower)
+        names.append(nm)
+
+    out: list[dict] = []
+    for i in range(len(names)):
+        for j in range(i + 1, len(names)):
+            out.append(
+                {
+                    "drug_a": names[i],
+                    "drug_b": names[j],
+                    "severity": "unknown",
+                    "source_text": "No confirmed interaction pair was returned in the checked data source.",
+                }
+            )
+            if len(out) >= max_pairs:
+                return out
+    return out
 
 @app.get("/health")
 def health():
@@ -97,6 +133,44 @@ async def analyze(req: AnalyzeRequest):
         meds_lower_for_fall = [{"name": m.normalized_name.lower()} for m in valid_normalized]
 
         interactions_raw = await get_interactions_for_rxcuis(client, rxcuis)
+        if not interactions_raw:
+            openfda_interactions = await infer_interactions_from_openfda(
+                client, [m.normalized_name for m in normalized]
+            )
+            local_interactions = infer_interactions_from_names(
+                [m.normalized_name for m in normalized]
+            )
+
+            merged: dict[tuple[str, str], dict] = {}
+            for item in openfda_interactions + local_interactions:
+                a = str(item.get("drug_a", "")).lower().strip()
+                b = str(item.get("drug_b", "")).lower().strip()
+                if not a or not b:
+                    continue
+                pair_key = tuple(sorted([a, b]))
+                sev = str(item.get("severity", "unknown")).lower()
+                if sev not in SEVERITY_RANK:
+                    sev = "unknown"
+
+                if pair_key not in merged:
+                    merged[pair_key] = {
+                        "drug_a": a,
+                        "drug_b": b,
+                        "severity": sev,
+                        "source_text": str(item.get("source_text", "")),
+                    }
+                    continue
+
+                prev = merged[pair_key]
+                prev_rank = SEVERITY_RANK.get(str(prev.get("severity", "unknown")).lower(), 0)
+                cur_rank = SEVERITY_RANK.get(sev, 0)
+                if cur_rank > prev_rank:
+                    prev["severity"] = sev
+                    prev["source_text"] = str(item.get("source_text", "")) or str(prev.get("source_text", ""))
+                elif not str(prev.get("source_text", "")).strip():
+                    prev["source_text"] = str(item.get("source_text", ""))
+
+            interactions_raw = list(merged.values())
 
     interactions = [
         InteractionFact(
@@ -143,6 +217,8 @@ async def analyze(req: AnalyzeRequest):
         )
 
     interactions_for_bundle = [i.model_dump() for i in interactions]
+    if not interactions_for_bundle and len(meds_for_bundle) >= 2:
+        interactions_for_bundle = _build_llm_pair_fallback_cards(meds_for_bundle)
     facts = build_facts_bundle(
         age=req.age,
         meds=meds_for_bundle,

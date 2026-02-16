@@ -20,6 +20,46 @@ INTERACTIONS_CACHE_TTL_SECONDS = 10 * 60
 _rxcui_cache: Dict[str, Tuple[float, Tuple[Optional[str], Optional[str], Optional[str]]]] = {}
 _interactions_cache: Dict[Tuple[str, ...], Tuple[float, List[Dict[str, Any]]]] = {}
 
+# Conservative local fallback rules used only when external DDI data is unavailable.
+FALLBACK_DDI_RULES = [
+    {
+        "a": {"warfarin"},
+        "b": {"ibuprofen", "naproxen", "diclofenac", "ketorolac", "meloxicam", "celecoxib", "aspirin"},
+        "severity": "high",
+        "source_text": "This combination can increase bleeding risk.",
+    },
+    {
+        "a": {"warfarin"},
+        "b": {"sertraline", "fluoxetine", "escitalopram", "citalopram", "paroxetine", "venlafaxine", "duloxetine"},
+        "severity": "high",
+        "source_text": "This combination can increase bleeding risk.",
+    },
+    {
+        "a": {"apixaban", "rivaroxaban", "dabigatran", "edoxaban"},
+        "b": {"ibuprofen", "naproxen", "diclofenac", "ketorolac", "meloxicam", "celecoxib", "aspirin"},
+        "severity": "high",
+        "source_text": "This combination can increase bleeding risk.",
+    },
+    {
+        "a": {"clopidogrel", "prasugrel", "ticagrelor"},
+        "b": {"ibuprofen", "naproxen", "diclofenac", "ketorolac", "meloxicam", "celecoxib", "aspirin"},
+        "severity": "moderate",
+        "source_text": "This combination can increase bleeding risk.",
+    },
+    {
+        "a": {"oxycodone", "hydrocodone", "morphine", "codeine", "tramadol", "methadone", "fentanyl", "buprenorphine"},
+        "b": {"alprazolam", "diazepam", "lorazepam", "clonazepam", "temazepam", "zolpidem"},
+        "severity": "high",
+        "source_text": "This combination can increase sedation and breathing suppression risk.",
+    },
+    {
+        "a": {"lisinopril", "losartan", "valsartan", "olmesartan", "enalapril"},
+        "b": {"spironolactone"},
+        "severity": "moderate",
+        "source_text": "This combination can increase potassium levels and kidney stress risk.",
+    },
+]
+
 
 def _cache_get_rxcui(name_key: str) -> Optional[Tuple[Optional[str], Optional[str], Optional[str]]]:
     hit = _rxcui_cache.get(name_key)
@@ -49,6 +89,45 @@ def _cache_get_interactions(key: Tuple[str, ...]) -> Optional[List[Dict[str, Any
 
 def _cache_set_interactions(key: Tuple[str, ...], value: List[Dict[str, Any]]) -> None:
     _interactions_cache[key] = (time.monotonic() + INTERACTIONS_CACHE_TTL_SECONDS, copy.deepcopy(value))
+
+
+def _contains_any(name: str, keywords: set[str]) -> bool:
+    return any(k in name for k in keywords)
+
+
+def infer_interactions_from_names(names: List[str]) -> List[Dict[str, Any]]:
+    cleaned = [str(n or "").lower().strip() for n in names if str(n or "").strip()]
+    if len(cleaned) < 2:
+        return []
+
+    out: List[Dict[str, Any]] = []
+    seen: set[Tuple[str, str]] = set()
+
+    for i in range(len(cleaned)):
+        for j in range(i + 1, len(cleaned)):
+            a_name = cleaned[i]
+            b_name = cleaned[j]
+            for rule in FALLBACK_DDI_RULES:
+                ab_match = _contains_any(a_name, rule["a"]) and _contains_any(b_name, rule["b"])
+                ba_match = _contains_any(a_name, rule["b"]) and _contains_any(b_name, rule["a"])
+                if not (ab_match or ba_match):
+                    continue
+
+                pair_key = tuple(sorted([a_name, b_name]))
+                if pair_key in seen:
+                    continue
+                seen.add(pair_key)
+                out.append(
+                    {
+                        "drug_a": a_name,
+                        "drug_b": b_name,
+                        "severity": rule["severity"],
+                        "source_text": f"{rule['source_text']} (local fallback rule)",
+                    }
+                )
+                break
+
+    return out
 
 async def get_rxcui_for_name(client: httpx.AsyncClient, name: str) -> Tuple[Optional[str], Optional[str], Optional[str]]:
     """
@@ -189,8 +268,8 @@ async def get_interactions_for_rxcuis(
     rxcuis = [x for x in rxcuis if x]
     if not rxcuis:
         return []
-    key = tuple(sorted(set(rxcuis)))
-    cached = _cache_get_interactions(key)
+    cache_key = tuple(sorted(set(rxcuis)))
+    cached = _cache_get_interactions(cache_key)
     if cached is not None:
         return cached
 
@@ -217,11 +296,11 @@ async def get_interactions_for_rxcuis(
         for item in extracted:
             a = item["drug_a"]
             b = item["drug_b"]
-            key = tuple(sorted([a, b]))
-            if key in seen:
+            pair_key = tuple(sorted([a, b]))
+            if pair_key in seen:
                 continue
-            seen.add(key)
+            seen.add(pair_key)
             all_pairs.append(item)
 
-    _cache_set_interactions(key, all_pairs)
+    _cache_set_interactions(cache_key, all_pairs)
     return all_pairs

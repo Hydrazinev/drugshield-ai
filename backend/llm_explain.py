@@ -26,6 +26,14 @@ def _default_explanation_card(med_names: List[str], interactions: List[Dict[str,
             "what_to_watch_for": GENERIC_WATCH,
             "recommended_next_step": "Report symptoms and ask your clinician or pharmacist to review this combination.",
         }
+    if len(med_names) >= 2:
+        return {
+            "pair": [med_names[0], med_names[1]],
+            "severity": "unknown",
+            "simple_explanation": f"No confirmed interaction pair was returned for {med_names[0]} and {med_names[1]} in the checked data source.",
+            "what_to_watch_for": GENERIC_WATCH,
+            "recommended_next_step": "Ask your clinician or pharmacist to verify this pair, especially if symptoms are present.",
+        }
     if med_names:
         return {
             "pair": [med_names[0], "your body"],
@@ -93,7 +101,15 @@ def _build_local_explanation(bundle: Dict[str, Any]) -> Dict[str, Any]:
         })
 
     if not interaction_explanations:
-        if med_names:
+        if len(med_names) >= 2:
+            interaction_explanations.append({
+                "pair": [med_names[0], med_names[1]],
+                "severity": "unknown",
+                "simple_explanation": f"No confirmed interaction pair was returned for {med_names[0]} and {med_names[1]} in the checked data source.",
+                "what_to_watch_for": ["Dizziness", "Sleepiness", "Stomach upset", "Any unusual symptoms"],
+                "recommended_next_step": "Ask your clinician or pharmacist to verify this pair, especially if symptoms are present."
+            })
+        elif med_names:
             interaction_explanations.append({
                 "pair": [med_names[0], "your body"],
                 "severity": "low",
@@ -204,6 +220,59 @@ try:
     _OPENAI_AVAILABLE = True
 except Exception:
     _OPENAI_AVAILABLE = False
+
+
+def _call_responses_api_interactions_only(bundle: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """
+    Dedicated GPT call for 'What Happens When Taken Together' cards.
+    Returns only interaction_explanations list.
+    """
+    client = OpenAI(api_key=OPENAI_API_KEY, timeout=LLM_TIMEOUT_SECONDS, max_retries=0)
+    system = (
+        "You are DrugShield AI. Use only facts in provided JSON. "
+        "Return only a JSON array. Each item must contain keys: "
+        "pair (two-item array), severity, simple_explanation, what_to_watch_for, recommended_next_step. "
+        "For each pair, explain what happens when both medicines are taken together in plain language. "
+        "Do not output markdown or extra text. "
+        "If interaction evidence is missing, still provide a conservative practical explanation and monitoring guidance. "
+        "Do not provide advice to start/stop medicines."
+    )
+    user = f"Facts:\n{json.dumps(bundle, ensure_ascii=False)}"
+    resp = client.responses.create(
+        model=MODEL,
+        input=[
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+        text={"format": {"type": "text"}},
+    )
+
+    text_output = None
+    if hasattr(resp, "output_text") and resp.output_text:
+        text_output = resp.output_text
+    else:
+        try:
+            j = resp.to_dict() if hasattr(resp, "to_dict") else dict(resp)
+        except Exception:
+            j = dict(resp)
+        if "output" in j and isinstance(j["output"], list) and j["output"]:
+            out_item = j["output"][0]
+            if isinstance(out_item, dict):
+                for c in out_item.get("content", []):
+                    if isinstance(c, dict) and c.get("type") == "output_text":
+                        text_output = c.get("text")
+                        break
+                    if isinstance(c, dict) and "text" in c:
+                        text_output = c.get("text")
+                        break
+
+    if not text_output:
+        raise RuntimeError("No interaction explanations returned from Responses API")
+
+    parsed = json.loads(text_output)
+    if not isinstance(parsed, list):
+        raise RuntimeError("Interaction explanations response was not a JSON array")
+    return parsed
 
 def _call_responses_api(bundle: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -334,12 +403,20 @@ def explain_with_llm(bundle: Dict[str, Any]) -> Dict[str, Any]:
         return _ensure_explanation_shape(bundle, _build_local_explanation(bundle))
 
     # Try Responses API if SDK is present
+    out: Dict[str, Any] = _build_local_explanation(bundle)
     if _OPENAI_AVAILABLE:
         try:
-            return _ensure_explanation_shape(bundle, _call_responses_api(bundle))
+            out = _call_responses_api(bundle)
         except Exception:
             # If the API is slow/unreachable, fail fast to local fallback.
             pass
 
-    # Final local fallback
-    return _ensure_explanation_shape(bundle, _build_local_explanation(bundle))
+    # Always try a dedicated GPT pass for pair explanations when key+SDK are available.
+    # If this fails, keep whichever explanations already exist in `out`.
+    if _OPENAI_AVAILABLE:
+        try:
+            out["interaction_explanations"] = _call_responses_api_interactions_only(bundle)
+        except Exception:
+            pass
+
+    return _ensure_explanation_shape(bundle, out)
